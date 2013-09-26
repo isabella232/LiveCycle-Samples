@@ -26,30 +26,28 @@
 <property environment="env"/>
 
 <property name="project.dir" value=".." />
-<property name="client-libs.dir" location="${env.LiveCycle_ROOT}/LiveCycle_ES_SDK/client-libs" />
-<property name="client-common.dir" location="${client-libs.dir}/common" />
 <property name="export.dir" location="${project.dir}/export" />
-<property name="client-thirdparty.dir" location="${client-libs.dir}/thirdparty" />
 <property name="build.out.dir" location="${project.dir}/build/out" />
 <property name="build.classes.dir" location="${export.dir}/classes" />
 <property name="build.src.dir" location="${project.dir}/src" />
 <property name="property.dir" location="${project.dir}/properties" />
+<property file="build.properties"/>
 
 <path id="path.libs">
-	<pathelement location="${client-common.dir}/adobe-livecycle-client.jar"/>	
-	<pathelement location="${client-common.dir}/adobe-generatepdf-client.jar"/>	
-	<pathelement location="${client-common.dir}/adobe-usermanager-client.jar"/>	
-	<pathelement location="${client-thirdparty.dir}/activation.jar"/>
-	<pathelement location="${client-thirdparty.dir}/axis.jar"/>
-	<pathelement location="${client-thirdparty.dir}/commons-collections-3.1.jar"/>	
-	<pathelement location="${client-thirdparty.dir}/commons-discovery.jar"/>	
-	<pathelement location="${client-thirdparty.dir}/commons-logging.jar"/>	
-	<pathelement location="${client-thirdparty.dir}/jaxrpc.jar"/>	
-	<pathelement location="${client-thirdparty.dir}/log4j.jar"/>	
-	<pathelement location="${client-thirdparty.dir}/mail.jar"/>	
-	<pathelement location="${client-thirdparty.dir}/saaj.jar"/>
-	<pathelement location="${client-thirdparty.dir}/wsdl4j.jar"/>	
-	<pathelement location="${client-thirdparty.dir}/xercesImpl.jar"/>
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/common/adobe-livecycle-client.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/common/adobe-generatepdf-client.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/common/adobe-usermanager-client.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/activation.jar"/>
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/axis.jar"/>
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/commons-collections-3.1.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/commons-discovery.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/commons-logging.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/jaxrpc.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/log4j.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/mail.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/saaj.jar"/>
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/wsdl4j.jar"/>	
+	<pathelement location="${LiveCycle_ROOT}/sdk/client-libs/thirdparty/xercesImpl.jar"/>
 </path>
 
 <target name="inc">
@@ -73,6 +71,8 @@
 <!-- Compiles the java files in src & creates the jar-->
 <target name="compile" depends="prepare">
 	<echo message="Compile PDFG ZipToPDF sample orchestration code"/>
+	<echo message="${client-libs.dir}"/>
+	<echo message="${LiveCycle_ROOT}"/>
 	<javac destdir="${build.out.dir}" debug="true" deprecation="true">
 		<classpath>
 			<path refid="path.libs"/>
