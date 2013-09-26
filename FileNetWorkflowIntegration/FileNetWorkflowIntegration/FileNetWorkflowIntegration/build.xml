@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * **********************************************************************************************
+ *
+ * ADOBE SYSTEMS INCORPORATED
+ * Copyright 2007 Adobe Systems Incorporated
+ * All Rights Reserved
+ * 
+ * NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the
+ * terms of the Adobe license agreement accompanying it.  If you have received this file from a
+ * source other than Adobe, then your use, modification, or distribution of it requires the prior
+ * written permission of Adobe.
+ *
+ * **********************************************************************************************
+-->
+<project name="FileNetWorkflowIntegration" default="packageSample" basedir=".">
+    <description>Sample to demonstrate integration of the Simple Mortgage Loan Application Process with FileNet Workflow</description>
+
+    <property file="${basedir}/Configuration/build.properties" />   
+    <property name="CONFIG_PROPS" value="${basedir}/Configuration/Configuration.properties"/>
+    <property name="JAR_NAME" value="LiveCycleESSimpleMortgageLoanProcessSample.jar"/>      
+    
+    <property name="SRC" location="${basedir}/src"/>
+    <property name="CLIENT_STUB_SRC" location="${basedir}/clientstubsrc"/>   
+    <property name="BIN" location="${basedir}/bin"/>
+    <property name="DIST" location="${basedir}/dist"/>    
+
+    <path id="axis.classpath">
+        <fileset dir="${AxisLibDir}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <path id="javax_servlet.classpath">
+        <pathelement path="${JavaxServletJarPath}"/>   
+    </path>
+       
+    <path id="filenet.classpath">
+        <fileset dir="${FileNetLibDir}">
+            <include name="javaapi.jar"/>
+            <include name="p8toolkit.jar"/>
+            <include name="pe.jar"/>
+			<include name="Jace.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Task definitions -->   
+    <taskdef resource="axis-tasks.properties" classpathref="axis.classpath"/>
+   
+    <!-- Targets -->
+    <target name="clean" description="Cleans the generated code and binary files">
+        <echo>Deleting directories...</echo>
+        <delete quiet="true" includeemptydirs="true">
+            <fileset dir="${CLIENT_STUB_SRC}"/>
+            <fileset dir="${BIN}"/>
+            <fileset dir="${DIST}"/>            
+        </delete>
+    </target>
+
+    <!-- Generate client stubs -->   
+    <target name="generateClientStubs" description="Generates client stub code for LC ES orchestrations used">
+        <echo>+---------------------------------------------------+</echo>
+        <echo>|                                                   |</echo>
+        <echo>| G E N E R A T I N G   C L I E N T   S T U B S     |</echo>
+        <echo>|                                                   |</echo>
+        <echo>+---------------------------------------------------+</echo>
+        
+        <delete quiet="true" includeemptydirs="true">
+            <fileset dir="${CLIENT_STUB_SRC}"/>
+        </delete>
+        <mkdir dir="${CLIENT_STUB_SRC}"/>
+
+        <axis-wsdl2java output="${CLIENT_STUB_SRC}" testcase="false" serverside="false" verbose="true" 
+            username="${LCUser}" 
+            password="${LCPassword}" 
+            url="${LCBaseURL}/soap/services/Samples - ConnectorforIBMFileNet/Processes/RenderFormsFromNR-FileNet?wsdl"/>        
+        <axis-wsdl2java output="${CLIENT_STUB_SRC}" testcase="false" serverside="false" verbose="true" 
+            username="${LCUser}" 
+            password="${LCPassword}" 
+            url="${LCBaseURL}/soap/services/Samples - ConnectorforIBMFileNet/Processes/ArchiveSubmittedDataWithNR-FileNet?wsdl"/>   
+        <axis-wsdl2java output="${CLIENT_STUB_SRC}" testcase="false" serverside="false" verbose="true" 
+            username="${LCUser}" 
+            password="${LCPassword}" 
+            url="${LCBaseURL}/soap/services/Samples - ConnectorforIBMFileNet/Processes/RenderNRFormsFromSubmittedData-FileNet?wsdl"/>
+        <axis-wsdl2java output="${CLIENT_STUB_SRC}" testcase="false" serverside="false" verbose="true" 
+            username="${LCUser}" 
+            password="${LCPassword}" 
+            url="${LCBaseURL}/soap/services/Samples - FileNetWorkflowIntegration/Processes/TemplateFileNetWorkflowStepRenderService?wsdl"/>
+        <axis-wsdl2java output="${CLIENT_STUB_SRC}" testcase="false" serverside="false" verbose="true" 
+            username="${lc_user_name}" 
+            password="${LCPassword}" 
+            url="${LCBaseURL}/soap/services/Samples - FileNetWorkflowIntegration/Processes/TemplateFileNetWorkflowStepSubmitService?wsdl"/>
+    </target>
+    
+    <!-- Compiles the source code -->   
+    <target name="compileSrc" depends="clean, generateClientStubs" description="Compiles the source code">   
+        <echo>+---------------------------------------------------+</echo>
+        <echo>|                                                   |</echo>
+        <echo>| C O M P I L I N G   S O U R C E                   |</echo>
+        <echo>|                                                   |</echo>
+        <echo>+---------------------------------------------------+</echo>
+
+        <mkdir dir="${BIN}"/>
+        <javac deprecation="true" source="${SourceJRE}" target="${TargetJRE}" 
+            destdir="${BIN}" debug="true" verbose="on">
+            <src path="${SRC}"/>
+            <src path="${CLIENT_STUB_SRC}"/>
+            <include name="**/*.java" />
+            <classpath refid="filenet.classpath" />
+            <classpath refid="axis.classpath" />
+            <classpath refid="javax_servlet.classpath"/>
+        </javac>
+        <copy todir="${BIN}">
+            <fileset file="${CONFIG_PROPS}"/>
+         </copy>
+    </target>
+ 
+    <!-- Packages the jar file --> 
+    <target name="packageSample" depends="compileSrc" description="Packages the Jar file">
+        <echo>+---------------------------------------------------+</echo>
+        <echo>|                                                   |</echo> 
+        <echo>| P A C K A G I N G   S A M P L E   J A R           |</echo> 
+        <echo>|                                                   |</echo> 
+        <echo>+---------------------------------------------------+</echo>
+        
+        <mkdir dir="${DIST}" /> 
+        <jar destfile="${DIST}\${JAR_NAME}" basedir="${BIN}"/>
+    </target>   
+</project>

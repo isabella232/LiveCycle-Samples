@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="wsdl_stubs"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="J2EE_JAR_PATH/j2ee.jar"/>
+	<classpathentry kind="var" path="II4C_JAR_PATH/cmb81.jar"/>
+	<classpathentry kind="var" path="II4C_JAR_PATH/cmbsdk81.jar"/>
+	<classpathentry kind="var" path="II4C_JAR_PATH/cmbview81.jar"/>
+	<classpathentry kind="var" path="AXIS_LIB_PATH/axis.jar"/>
+	<classpathentry kind="var" path="ECLIENT_JAR_PATH/idm.jar"/>
+	<classpathentry kind="var" path="AXIS_LIB_PATH/jaxrpc.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

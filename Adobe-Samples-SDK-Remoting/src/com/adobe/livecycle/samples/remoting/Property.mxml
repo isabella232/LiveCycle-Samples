@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--*************************************************************************
+*
+* ADOBE CONFIDENTIAL
+* ___________________
+*
+*  Copyright 2007 Adobe Systems Incorporated
+*  All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of Adobe Systems Incorporated and its suppliers,
+* if any.  The intellectual and technical concepts contained
+* herein are proprietary to Adobe Systems Incorporated and its
+* suppliers and may be covered by U.S. and Foreign Patents,
+* patents in process, and are protected by trade secret or copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Adobe Systems Incorporated.
+**************************************************************************-->
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*">
+
+	<mx:Model id="stateList" source="states.xml"/>
+	
+    <mx:StringValidator source="{address}" property="text" required="true"/>
+	
+	<mx:FormItem label="Address" required="true">
+		<mx:TextInput id="address" width="200"/>
+	</mx:FormItem>
+
+	<mx:FormItem label="City" required="true">
+		<mx:TextInput id="city" width="200"/>
+	</mx:FormItem>
+
+	<mx:FormItem label="State" required="true">
+		<mx:ComboBox id="stateCB" dataProvider="{stateList.state}" width="200"/>
+	</mx:FormItem>
+
+	<mx:FormItem label="Zip" required="true">
+		<mx:TextInput id="zip" width="50"/>
+	</mx:FormItem>
+
+	<mx:FormItem label="Property Type" paddingTop="20">
+		<mx:RadioButton id="singleFamily" label="Single Family"/>
+		<mx:RadioButton id="condominium" label="Condominium" selected="true"/>
+	</mx:FormItem>
+	
+</mx:Form>

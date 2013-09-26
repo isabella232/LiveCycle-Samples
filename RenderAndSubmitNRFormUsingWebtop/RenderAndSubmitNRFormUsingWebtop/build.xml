@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Render and Submit Form in Documentum Webtop" default="default" basedir=".">
+
+	<description>
+        Sample for Connecting EMC Documentum Webtop to LiveCycle ES. Works with ant 1.6.1 or (possibly) later.
+	</description>
+
+	<property name="basedirectory" location="." />
+	<property file="${basedirectory}/buildscripts/build.properties" />
+
+  	<!-- Common Project Properties Setup -->
+	<property name="wsdl.stub.dir" location="${basedirectory}/wsdl_stubs" />		
+
+	<!-- Various thirdparty Class Path Definitions  -->
+	<path id="dev.build.classpath.thirdparty">
+		<pathelement location="${j2ee_jar_path}\j2ee.jar"/>
+	</path>
+
+	<!-- Documentum DFC Class Path Definition  -->
+	<path id="dev.build.classpath.documentum">
+		<fileset dir="${dfc_jar_path}">		
+			<include name="**/dfc.jar"/>
+		</fileset>	
+	</path>
+		
+	<!-- Axis Class Path Definition  -->
+	 <path id="axis.classpath">		 
+		 <fileset dir="${axis_lib_path}">	
+				<include name="**/*.jar" /> 
+		 </fileset>
+	 </path>
+
+	<!-- Final Actual Class Path Definitions  -->
+	<path id="dev.build.default.classpath">
+		<path refid="dev.build.classpath.documentum" />
+		<path refid="dev.build.classpath.thirdparty" />
+	</path>
+
+	<!--Now all the targets-->
+	<target name="clean">
+	<echo> Cleaning the directories</echo>
+		<description>Erase all classes</description>
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${basedirectory}/bin/" />
+			<fileset dir="${basedirectory}/dist/" />
+		</delete>
+	</target>
+
+	<target name="prepare" depends="clean">
+		<mkdir dir="${basedirectory}/bin"/>
+		<mkdir dir="${basedirectory}/dist"/>
+	</target>
+
+	<target name="generatestub" description="Generate the client stubs of other samples">
+		  <delete quiet="true" includeemptydirs="true">
+				<fileset dir="${wsdl.stub.dir}" />
+		  </delete>
+		  <mkdir dir="${wsdl.stub.dir}" /> 
+		  <axis-wsdl2java output="${wsdl.stub.dir}" testcase="false" serverside="false" verbose="true" 
+		  	username="${lc_user_name}" password="${lc_user_pswd}" url="http://${lc_server}:${lc_server_port}/soap/services/Samples - ConnectorforEMCDocumentum/Processes/RenderNRFormsFromSubmittedData-Documentum?wsdl" />
+		  <axis-wsdl2java output="${wsdl.stub.dir}" testcase="false" serverside="false" verbose="true" 
+		  	username="${lc_user_name}" password="${lc_user_pswd}" url="http://${lc_server}:${lc_server_port}/soap/services/Samples - ConnectorforEMCDocumentum/Processes/ArchiveSubmittedDataWithNR-Documentum?wsdl" /> 
+		  <axis-wsdl2java output="${wsdl.stub.dir}" testcase="false" serverside="false" verbose="true" 
+		  	username="${lc_user_name}" password="${lc_user_pswd}" url="http://${lc_server}:${lc_server_port}/soap/services/Samples - ConnectorforEMCDocumentum/Processes/RenderFormsFromNR-Documentum?wsdl" /> 
+	</target>
+	
+	<target name="compile_wsdl_stubs" depends="generatestub">
+		<mkdir dir="${basedirectory}/bin" />
+		<javac deprecation="true" source="1.4" target="1.4" destdir="${basedirectory}/bin/" debug="true"  verbose="off">
+				<src path="${wsdl.stub.dir}" />
+				<include name="**/*.java" />
+ 				<classpath refid="axis.classpath" />
+		</javac>
+	</target>
+	
+	<target name="compile_sampleApps" depends="prepare,compile_wsdl_stubs">
+
+		<javac deprecation="true" source="1.4" target="1.4" destdir="${basedirectory}/bin/" debug="true"  verbose="on">
+			<src path="${basedirectory}/src " />
+			<include name="**/*.java" />
+			<classpath refid="dev.build.default.classpath" />
+			<classpath refid="axis.classpath" />
+			<classpath path="${webtop_webinf_path}/classes" />
+		</javac>
+		
+		<copy todir="${basedirectory}/bin">
+			<fileset dir="${basedirectory}/src" excludes="**/*.java" />
+		</copy>
+		
+	</target>
+	
+	
+	 <taskdef resource="axis-tasks.properties" classpathref="axis.classpath" />
+	
+	  <target name="packageSample" depends="compile_sampleApps">
+        <mkdir dir ="${basedirectory}/dist"/>     
+        <jar destfile="${basedirectory}/dist/LCES_SampleApps.jar"
+             basedir="${basedirectory}/bin"/>
+     </target>
+
+	<target name="buildSample" depends="packageSample"/>
+	
+	<target name="default" depends="buildSample"/>
+
+</project>

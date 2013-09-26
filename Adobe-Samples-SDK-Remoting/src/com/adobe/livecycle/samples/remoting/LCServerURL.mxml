@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--*************************************************************************
+*
+* ADOBE CONFIDENTIAL
+* ___________________
+*
+*  Copyright 2007 Adobe Systems Incorporated
+*  All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of Adobe Systems Incorporated and its suppliers,
+* if any.  The intellectual and technical concepts contained
+* herein are proprietary to Adobe Systems Incorporated and its
+* suppliers and may be covered by U.S. and Foreign Patents,
+* patents in process, and are protected by trade secret or copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Adobe Systems Incorporated.
+**************************************************************************-->
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="400" height="300" title="Live Cycle Server URL" label="Live Cycle Server URL">    
+    <mx:Form>        
+        <mx:Text text="Enter the SERVER:PORT of your Live Cycle ES server.  If this web application is running on the same
+        server as LC ES, you may leave the field blank.  For example, enter 11.22.333.444:8080." width="300"/>
+        <mx:Spacer height="20"/>
+        <mx:TextInput id="txtInputLCURL"/>
+        <mx:Spacer height="20"/>
+        <mx:Button label="OK" id="butDone" click="urlEntered()"/>
+    </mx:Form>
+    
+<mx:Script>
+        <![CDATA[            
+            import mx.managers.PopUpManager;
+        
+            private function urlEntered():void
+            {
+                PopUpManager.removePopUp(this);
+            }            
+        ]]>
+    </mx:Script>        
+</mx:Panel>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<config version='1.0'>
+    <scope type="dm_document" mimetype="adb-formdata/xml">
+
+	  <component id="ReviewFormDataHandler">
+        <pages>
+            <start>/custom/library/reviewFormDataStart.jsp</start>
+            <redir>/custom/library/reviewFormDataRedir.jsp</redir>
+            <choices>/custom/library/reviewFormDataChoices.jsp</choices>
+            <error>/custom/library/reviewFormDataError.jsp</error>
+        </pages>
+         <params>
+            <param name="objectId" required="true"></param>
+            <param name="actionName" required="false"></param>
+         </params>
+         <class>com.adobe.livecycle.samples.connectorforemcdocumentum.renderandsubmitnrformusingwebtop.ReviewFormDataHandler</class>
+      </component>
+
+   </scope>
+</config>

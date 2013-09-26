@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Render and Submit Form through IBM CM eClient" default="default" basedir=".">
+
+	<description>
+        Sample for Connecting IBM CM eClient to LiveCycle ES. Works with ant 1.6.1 or (possibly) later.
+	</description>
+
+	<property name="basedirectory" location="." />
+	<property file="${basedirectory}/buildscripts/build.properties" />
+
+  	<!-- Common Project Properties Setup -->
+	<property name="wsdl.stub.dir" location="${basedirectory}/wsdl_stubs" />		
+
+	<!-- Various thirdparty Class Path Definitions  -->
+	<path id="dev.build.classpath.thirdparty">
+		<pathelement location="${J2EE_JAR_PATH}\j2ee.jar"/>
+	</path>
+
+	<!-- IBM CM Class Path Definition  -->
+	<path id="dev.build.classpath.ibmcm">
+		<pathelement location="${basedirectory}/bin/" />
+		<fileset dir="${II4C_JAR_PATH}">		
+			<include name="cmb81.jar"/>
+			<include name="cmbcm81.jar"/>
+			<include name="cmbsdk81.jar"/>
+		</fileset>	
+		<fileset dir="${ECLIENT_JAR_PATH}">
+			<include name="idm.jar" />
+		</fileset>	
+	</path>
+	
+		
+	<!-- Axis Class Path Definition  -->
+	 <path id="axis.classpath">		 
+		 <fileset dir="${AXIS_LIB_PATH}">	
+				<include name="**/*.jar" /> 
+		 </fileset>
+	 </path>
+
+	<!-- Final Actual Class Path Definitions  -->
+	<path id="dev.build.default.classpath">
+		<path refid="dev.build.classpath.ibmcm" />
+		<path refid="dev.build.classpath.thirdparty" />
+	</path>
+
+	<!--Now all the targets-->
+	<target name="clean">
+	<echo> Cleaning the directories</echo>
+		<description>Erase all classes</description>
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${basedirectory}/bin/" />
+			<fileset dir="${basedirectory}/dist/" />
+		</delete>
+	</target>
+
+	<target name="prepare" depends="clean">
+		<mkdir dir="${basedirectory}/bin"/>
+		<mkdir dir="${basedirectory}/dist"/>
+	</target>
+
+	<target name="generatestub" description="Generate the client stubs of other samples">
+		  <delete quiet="true" includeemptydirs="true">
+				<fileset dir="${wsdl.stub.dir}" />
+		  </delete>
+		  <mkdir dir="${wsdl.stub.dir}" /> 
+		  <axis-wsdl2java output="${wsdl.stub.dir}" testcase="false" serverside="false" verbose="true" 
+		  	username="${LC_USERNAME}" password="${LC_PASSWORD}" url="http://${LC_SERVER}:${LC_SERVER_PORT}/soap/services/Samples - ConnectorforIBMCM/Processes/RenderNRFormsFromSubmittedData-IBMCM?wsdl" /> 
+		  <axis-wsdl2java output="${wsdl.stub.dir}" testcase="false" serverside="false" verbose="true" 
+		  	username="${LC_USERNAME}" password="${LC_PASSWORD}" url="http://${LC_SERVER}:${LC_SERVER_PORT}/soap/services/Samples - ConnectorforIBMCM/Processes/ArchiveSubmittedDataWithNR-IBMCM?wsdl" /> 
+			<axis-wsdl2java output="${wsdl.stub.dir}" testcase="false" serverside="false" verbose="true" 
+		  	username="${LC_USERNAME}" password="${LC_PASSWORD}" url="http://${LC_SERVER}:${LC_SERVER_PORT}/soap/services/Samples - ConnectorforIBMCM/Processes/RenderFormsFromNR-IBMCM?wsdl" /> 
+	</target>
+	
+	<target name="compile_wsdl_stubs" depends="generatestub">
+		<mkdir dir="${basedirectory}/bin" />
+		<javac deprecation="true" source="1.4" target="1.4" destdir="${basedirectory}/bin/" debug="true"  verbose="off">
+				<src path="${wsdl.stub.dir}" />
+				<include name="**/*.java" />
+ 				<classpath refid="axis.classpath" />
+		</javac>
+	</target>
+	
+	<target name="compile_sampleApps" depends="prepare,compile_wsdl_stubs">
+
+		<javac deprecation="true" source="1.4" target="1.4" destdir="${basedirectory}/bin/" debug="true"  verbose="off">
+			<src path="${basedirectory}/src" />
+			<include name="**/*.java" />
+			<classpath refid="dev.build.default.classpath" />
+			<classpath refid="axis.classpath" />
+		</javac>
+		
+		<copy todir="${basedirectory}/bin">
+			<fileset dir="${basedirectory}/src" excludes="**/*.java" />
+		</copy>
+		
+	</target>
+	
+	
+	 <taskdef resource="axis-tasks.properties" classpathref="axis.classpath" />
+	
+	  <target name="packageSample" depends="compile_sampleApps">
+        <mkdir dir ="${basedirectory}/dist"/>     
+        <jar destfile="${basedirectory}/dist/LCES_SampleApps.jar"
+             basedir="${basedirectory}/bin"/>
+     </target>
+
+	<target name="buildSample" depends="packageSample"/>
+	
+	<target name="default" depends="buildSample"/>
+
+</project>

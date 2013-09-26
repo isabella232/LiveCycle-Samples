@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<project name="flex" default="compile" basedir=".">
+
+    <property name="flex.mxmlc" value="mxmlcomp/bin/mxmlc" />
+    <property name="dest.dir" value="bin"/>
+
+    <target name="compile">
+      <exec executable="${flex.mxmlc}" failonerror="true">
+        <arg line="-output=main.swf"/>
+        <arg line="-use-network=true"/>
+        <arg line="-compiler.source-path=src"/>
+        <arg line="-compiler.library-path=libs"/>
+        <arg line="-compiler.library-path=mxmlcomp/frameworks/libs"/>
+        <arg line="-compiler.library-path=mxmlcomp/frameworks/locale/en_US"/>
+        <arg line="src/com/adobe/livecycle/samples/remoting/main.mxml"/>
+      </exec>
+    </target>
+</project>

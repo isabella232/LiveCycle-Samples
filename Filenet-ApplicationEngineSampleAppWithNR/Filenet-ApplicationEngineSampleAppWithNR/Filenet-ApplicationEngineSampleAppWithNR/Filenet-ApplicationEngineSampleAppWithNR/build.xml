@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * **********************************************************************************************
+ *
+ * ADOBE SYSTEMS INCORPORATED
+ * Copyright 2007 Adobe Systems Incorporated
+ * All Rights Reserved
+ * 
+ * NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the
+ * terms of the Adobe license agreement accompanying it.  If you have received this file from a
+ * source other than Adobe, then your use, modification, or distribution of it requires the prior
+ * written permission of Adobe.
+ *
+ * **********************************************************************************************
+-->
+<project name="Filenet-RenderAndSubmitNRFormsUsingWorkplace" default="buildSample">
+	<description>Render and Submit Form in FileNet Workplace</description>
+    <property name="basedirectory" location="."/>
+    <property name="wsdl_sub_dir" location="${basedirectory}/stubs_src" />
+    <property name="wsdl_sub_bin" location="${basedirectory}/stubs_bin" />
+   
+    <path id="axis.classpath">
+        <fileset dir="${axis_lib_path}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+   
+	<path id="javax_servlet.classpath">
+		<pathelement location="${j2ee_jar_path}/j2ee.jar"/>
+	</path>
+
+	<path id="filenet.classpath">
+		<fileset dir="${filenet_libs}">
+			<include name="activation.jar"/>
+			<include name="mailapi.jar"/>
+			<include name="javaapi.jar"/>
+			<include name="log4j-1.2.8.jar"/>
+			<include name="p8cjares.jar"/>
+			<include name="soap.jar"/>
+			<include name="xercesImpl.jar"/>
+			<include name="xml-apis.jar"/>
+			<include name="Jace.jar"/>
+		</fileset>
+	</path>
+
+	<path id="build.classpath">
+		<path refid="axis.classpath"/>      
+		<path refid="filenet.classpath" />
+		<path refid="javax_servlet.classpath" /> 
+	</path>
+
+    <taskdef resource="axis-tasks.properties" classpathref="axis.classpath" />
+
+	<!--Now all the targets-->
+	<target name="clean">
+		<echo> Cleaning the directories</echo>
+		<description>Erase all classes</description>
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${basedirectory}/bin/" />
+			<fileset dir="${basedirectory}/dist/" />
+		</delete>
+	</target>
+
+	<target name="prepare" depends="clean">
+		<mkdir dir="${basedirectory}/bin"/>
+		<mkdir dir="${basedirectory}/dist"/>
+	</target>
+
+	<target name="generatestub" description="generate the client stubs of the Samples" >
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${wsdl_sub_dir}" />
+		</delete>
+		<mkdir dir="${wsdl_sub_dir}" />
+		<axis-wsdl2java output="${wsdl_sub_dir}" testcase="false" serverside="false" verbose="true" username="${lc_user_name}" password="${lc_user_passwd}" url="http://${lc_server}:${lc_server_port}/soap/services/Samples - ConnectorforIBMFileNet/Processes/RenderNRFormsFromSubmittedData-FileNet?wsdl" /> 
+		<axis-wsdl2java output="${wsdl_sub_dir}" testcase="false" serverside="false" verbose="true" username="${lc_user_name}" password="${lc_user_passwd}" url="http://${lc_server}:${lc_server_port}/soap/services/Samples - ConnectorforIBMFileNet/Processes/ArchiveSubmittedDataWithNR-FileNet?wsdl" /> 
+		<axis-wsdl2java output="${wsdl_sub_dir}" testcase="false" serverside="false" verbose="true" username="${lc_user_name}" password="${lc_user_passwd}" url="http://${lc_server}:${lc_server_port}/soap/services/Samples - ConnectorforIBMFileNet/Processes/RenderFormsFromNR-FileNet?wsdl" />
+	</target>
+    
+	<target name="compile_stubs" depends="prepare ,generatestub" >
+		<description>Compilation the stub classes</description>
+		<echo>+---------------------------------------------------+</echo>
+		<echo>|                                                   |</echo>
+		<echo>| C O M P I L I N G  WSDL  S O U R C E S            |</echo>
+		<echo>|                                                   |</echo>
+		<echo>+---------------------------------------------------+</echo>
+
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${wsdl_sub_bin}" />
+		</delete>
+
+		<mkdir dir="${wsdl_sub_bin}" />
+		<javac deprecation="true" source="${source_jre}" target="${target_jre}" destdir="${wsdl_sub_bin}" debug="true"  verbose="on">
+			<src path="${wsdl_sub_dir}" />
+			<include name="**/*.java" />
+			<classpath refid="build.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="generateStubsJar" depends="compile_stubs">
+        <jar destfile="${basedirectory}/dist/submitRenderStubsForNR.jar" basedir="${wsdl_sub_bin}"/>
+	</target>
+
+	<target name="compile_sampleApps" >
+		<description>Compilation Target for dss classes.</description>
+		<echo>+---------------------------------------------------+</echo>
+		<echo>|                                                   |</echo>
+		<echo>| C O M P I L I N G   S O U R C E S                 |</echo>
+		<echo>|                                                   |</echo>
+		<echo>+---------------------------------------------------+</echo>
+
+		<mkdir dir="${basedirectory}/bin" />
+		<javac deprecation="true" source="${source_jre}" target="${target_jre}" destdir="${basedirectory}/bin/" debug="true"  verbose="on">
+			<src path="${basedirectory}/src" />
+			<include name="**/*.java" />
+			<classpath refid="build.classpath" />
+			<classpath path="${wsdl_sub_bin}" />
+		</javac>
+		
+	</target>
+
+	<target name="packageSample" depends="compile_sampleApps">
+		<jar destfile="${basedirectory}/dist/renderSubmitSampleForNR.jar" basedir="${basedirectory}/bin"/>
+	</target>
+
+	<target name="buildSample" depends="generateStubsJar, packageSample"/>
+</project>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--*************************************************************************
+*
+* ADOBE CONFIDENTIAL
+* ___________________
+*
+*  Copyright 2007 Adobe Systems Incorporated
+*  All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of Adobe Systems Incorporated and its suppliers,
+* if any.  The intellectual and technical concepts contained
+* herein are proprietary to Adobe Systems Incorporated and its
+* suppliers and may be covered by U.S. and Foreign Patents,
+* patents in process, and are protected by trade secret or copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Adobe Systems Incorporated.
+**************************************************************************-->
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*"
+	width="100%" paddingTop="4" paddingRight="20" paddingBottom="4">
+
+	<mx:Metadata>
+        [Event("removeItem")]
+    </mx:Metadata>
+
+	<mx:Form paddingTop="0" paddingBottom="0">
+		<mx:FormItem label="Bank Name">
+			<mx:TextInput id="bank" width="200" text="{data.bank}"/>
+		</mx:FormItem>	
+		<mx:FormItem label="Account Id">
+			<mx:TextInput id="accountId" width="200" text="{data.accountId}"/>
+		</mx:FormItem>	
+		<mx:FormItem label="Balance">
+			<mx:TextInput id="balance" width="200" text="{data.balance}"/>
+		</mx:FormItem>	
+	</mx:Form>
+
+	<mx:Button label="Remove" click="dispatchEvent(new Event('removeItem'))"/>
+	
+	<mx:Binding source="bank.text" destination="data.bank"/>
+	<mx:Binding source="accountId.text" destination="data.accountId"/>
+	<mx:Binding source="balance.text" destination="data.balance"/>
+	
+</mx:HBox>

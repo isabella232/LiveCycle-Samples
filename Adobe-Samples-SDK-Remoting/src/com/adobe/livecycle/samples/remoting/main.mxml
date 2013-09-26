@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--*************************************************************************
+*
+* ADOBE CONFIDENTIAL
+* ___________________
+*
+*  Copyright 2007 Adobe Systems Incorporated
+*  All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of Adobe Systems Incorporated and its suppliers,
+* if any.  The intellectual and technical concepts contained
+* herein are proprietary to Adobe Systems Incorporated and its
+* suppliers and may be covered by U.S. and Foreign Patents,
+* patents in process, and are protected by trade secret or copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Adobe Systems Incorporated.
+**************************************************************************-->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" creationPolicy="all"
+	backgroundGradientColors="[#FFFFFF, #FFFFFF]" creationComplete="initApp()" xmlns:remoting="com.adobe.livecycle.samples.remoting.*">
+
+	<mx:Script>
+		<![CDATA[
+
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import flash.net.navigateToURL;
+			import mx.messaging.ChannelSet;
+			import mx.messaging.channels.SecureAMFChannel;
+			import mx.messaging.channels.AMFChannel;
+			import mx.managers.PopUpManager;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.livecycle.DocumentReference;
+			
+			private var serverURLPopUp:LCServerURL;
+
+			/**
+			 * 	Gather the LiveCycle server URL from the user.
+			 *  If none entered the dynamically created ChannelSet will assume that this application
+			 *  is deployed on the same machine as LiveCycle.
+			 * 
+			 */
+			private function initApp():void
+			{				
+				serverURLPopUp = new LCServerURL();
+				PopUpManager.addPopUp(serverURLPopUp, this, true);
+				PopUpManager.centerPopUp(serverURLPopUp);
+			}				
+
+			/**
+			 * Submits the XML gathered by this application to the server for PDF creation via a Remoting invocation.
+			 */
+			private function submitApplication():void
+			{
+			    // create ChannelSet dynamically in order to support this application and LiveCycle running on different machines
+			    var serverURL:String
+                
+                if (serverURLPopUp.txtInputLCURL.text == null || serverURLPopUp.txtInputLCURL.text == "")
+                {
+					// if server information were not explicitly entered, default to the default AMF channel and assume
+					// that we are invoking the server from which this SWF were loaded (only works if SWF is deployed
+					// on an LCES server - unlikely)
+                    serverURL = "/remoting/messagebroker/amf";    
+                }
+                else
+                {
+					// this is the more common scenario where the AMF channel URI is constructed from the server
+					// information entered by the user; this sample can thus be used to invoke any LCES server
+                    serverURL = "http://" + serverURLPopUp.txtInputLCURL.text + "/remoting/messagebroker/amf";
+                }
+                
+                var amfChannel:AMFChannel = new AMFChannel(null, serverURL);
+                var channelSet:ChannelSet = new ChannelSet();
+                channelSet.addChannel(amfChannel);
+				
+				// set the channel set on the RemoteObject used to make the Remoting invocation
+                lc.channelSet = channelSet;			    
+			    			    
+				// gather user entered data as XML
+				var xml:XML = createXML();
+				
+				// Remoting uses named params where the names correspond to the input parameter names
+				// of the LCES operation being invoked
+				var invocationParams:Object = new Object();
+				invocationParams["xmlData"] = xml;
+				
+				// Remoting allows you to specify an explicit service version via the special "_version" parameter.
+				// If this paramter is not specified, the head active configuration of the service is invoked.
+				invocationParams["_version"] = "1.0";
+				
+				// this is the actual Remoting invocation
+				lc.invoke(invocationParams);
+			}
+
+			/**
+			 * The invocation's result will contain a URL that allows the generated pdf to be displayed
+			 * by this application.  This handler displays the generated pdf.
+			 */
+			private function resultHandler(event:ResultEvent):void
+			{
+				// The mx.rpc.livecycle.DocumentReference ActionScript class is used to represent
+				// com.adobe.idp.Document's in Flex applications.  In this case the only output parameter, "pdfDoc",
+				// of the invoked process is a PDF document.  It comes back to us as a DocumentReference.  We can 
+				// use this class's url property to display the document in our Flex application.
+				var documentReference:DocumentReference = event.result.pdfDoc as DocumentReference;	
+				
+				navigateToURL(new URLRequest(documentReference.url) , "_blank");
+			}
+
+			/**
+			 * This function gathers the data from various UI components of this application and packages them into
+			 * an XML string to be sent to the server as the invocation's input parameter.
+			 */
+			private function createXML():XML
+			{
+				var model:XML = 
+
+					<mortgageApplication>
+	
+						<applicant>
+							<firstName>{applicant.firstName.text}</firstName>
+							<lastName>{applicant.lastName.text}</lastName>
+							<ssn>{applicant.ssn.text}</ssn>
+							<daytimePhone>{applicant.daytimePhone.text}</daytimePhone>
+							<mobilePhone>{applicant.mobilePhone.text}</mobilePhone>
+							<notifyMobile>{applicant.notifyMobile.selected}</notifyMobile>
+							<email>{applicant.email.text}</email>
+							<usCitizen>{applicant.citizenYes.selected}</usCitizen>
+						</applicant>
+						
+						<property>
+							<address>{property.address.text}</address>
+							<city>{property.city.text}</city>
+							<state>{property.stateCB.selectedLabel}</state>
+							<zip>{property.zip.text}</zip>
+							<type>{property.singleFamily.selected?"Single Family":"Condominum"}</type>
+						</property>
+						
+						<mortgage>
+							<price>{mortgage.price.value}</price>
+							<downPayment>{mortgage.downPayment.value}</downPayment>
+							<loanAmount>{mortgage.price.value - mortgage.downPayment.value}</loanAmount>
+							<closingDate>{mortgage.closingDate.selectedDate}</closingDate>
+						</mortgage>
+						
+						<employment/>
+						<assets/>
+					
+					</mortgageApplication>
+
+				var jobList:ArrayCollection = employment.jobList;
+				var length:int = jobList.length;
+				// the XDP has a start index issue so need this empty company to be at index 0
+				// which will be ignored by XDP
+				var jobHack:XML = 
+	                    <job>
+	                        <company></company>
+	                        <startDate></startDate>
+	                        <endDate></endDate>
+	                        <salary></salary>
+	                    </job>;
+				model.employment[0].appendChild(jobHack);				
+				for (var i:int=0; i<length; i++)
+				{
+					var job:XML = 
+	                    <job>
+	                        <company>{jobList[i].company}</company>
+	                        <startDate>{jobList[i].startDate}</startDate>
+	                        <endDate>{jobList[i].endDate}</endDate>
+	                        <salary>{jobList[i].salary}</salary>
+	                    </job>;
+                    model.employment[0].appendChild(job);
+				}
+
+				var accountList:ArrayCollection = assets.accountList;
+				length = accountList.length;
+				for (var j:int=0; j<length; j++)
+				{
+					var account:XML = 
+	                    <account>
+	                        <bank>{accountList[j].bank}</bank>
+	                        <accountId>{accountList[j].accountId}</accountId>
+	                        <balance>{accountList[j].balance}</balance>
+	                    </account>;
+                    model.assets.appendChild(account);
+				}
+
+				return model;
+			}
+			
+			/**
+			 * If the invocation encounters a fault, the details are displayed by this handler
+			 */
+			private function faultHandler(event:FaultEvent):void
+			{
+				Alert.show(
+					event.fault.faultString + "\n" +
+					event.fault.faultCode + "\n" +
+					event.fault.faultDetail, 
+					"Error");
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:Style source="main.css"/>
+	
+	<!-- This is the definition of the RemoteObject used to make the Remoting invocation to the server side process. 
+	The destination name corresponds to the name of the Remoting endpoint that was created when the RemotingSample 
+	application were deployed to the server.  We also register result and fault handlers.  The handlers themselves
+	are defined above-->
+	<mx:RemoteObject id="lc" destination="Adobe-Samples-SDK-Remoting/Adobe-Samples-SDK-Remoting"
+		result="resultHandler(event)" fault="faultHandler(event)"/>
+	
+	<!-- This panel includes the remaining UI components defined in this application.  They are used to gather 
+	entered information that will be sent to the server in XML form as the invocation's input parametr -->
+	<mx:Panel title="My Mortgage Application" backgroundAlpha="0.8" backgroundImage="/img/background.jpg">
+		<mx:Accordion width="700" height="550" backgroundAlpha=".8">
+			<remoting:Applicant id="applicant" label="Applicant Information"/>
+			<remoting:Property id="property" label="Property Information"/>
+			<remoting:MortgageInfo id="mortgage" label="Mortgage Information"/>
+			<remoting:Employment id="employment" label="Employment History" />
+			<remoting:Assets id="assets" label="Financial Assets"/>
+		</mx:Accordion>
+		<mx:ControlBar bottom="20">
+			<mx:Button label="Submit Application" icon="@Embed('/img/icon_save.png')" click="submitApplication()"/>
+		</mx:ControlBar>		
+    </mx:Panel> 	  
+</mx:Application>

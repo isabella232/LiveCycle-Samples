@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--*************************************************************************
+*
+* ADOBE CONFIDENTIAL
+* ___________________
+*
+*  Copyright 2007 Adobe Systems Incorporated
+*  All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of Adobe Systems Incorporated and its suppliers,
+* if any.  The intellectual and technical concepts contained
+* herein are proprietary to Adobe Systems Incorporated and its
+* suppliers and may be covered by U.S. and Foreign Patents,
+* patents in process, and are protected by trade secret or copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Adobe Systems Incorporated.
+**************************************************************************-->
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*"
+	creationComplete="initComp()" width="100%" height="100%" xmlns:remoting="com.adobe.livecycle.samples.remoting.*">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			public var jobList:ArrayCollection;
+			
+			public function initComp():void
+			{
+				jobList = new ArrayCollection();
+				jobList.addItem(new Object());	
+			}
+
+		]]>
+	</mx:Script>
+	
+	<mx:Label text="Enter your employment history for the last 5 years." top="10" left="10"/>
+
+	<mx:VBox top="38" bottom="40" left="10" right="10" verticalGap="0" borderStyle="solid" minHeight="100" horizontalScrollPolicy="auto">
+		<mx:Repeater id="list" dataProvider="{jobList}">
+			<remoting:Job data="{list.currentItem}" backgroundAlpha=".1"
+				removeItem="jobList.removeItemAt(event.target.repeaterIndex)"/>
+			<mx:HRule width="100%" height="1"/>
+		</mx:Repeater>
+	</mx:VBox>
+	
+	<mx:Button label="Add Company" left="10" bottom="10" click="jobList.addItem(new Object())" enabled="{(jobList.length) &lt; 4}"/>
+
+</mx:Canvas>

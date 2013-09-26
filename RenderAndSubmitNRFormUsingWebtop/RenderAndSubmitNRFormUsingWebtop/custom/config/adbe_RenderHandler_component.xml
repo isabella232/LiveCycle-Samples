@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<config version='1.0'>
+    <scope type="dm_document" mimetype="text/plain">
+
+	  <component id="RenderFormHandler">
+        <pages>
+            <start>/custom/library/renderFormStart.jsp</start>
+            <redir>/custom/library/renderFormRedir.jsp</redir>
+            <choices>/custom/library/renderFormChoices.jsp</choices>
+            <error>/custom/library/renderFormError.jsp</error>
+        </pages>
+         <params>
+            <param name="objectId" required="true"></param>
+            <param name="actionName" required="false"></param>
+         </params>
+         <class>com.adobe.livecycle.samples.connectorforemcdocumentum.renderandsubmitnrformusingwebtop.RenderFormHandler</class>
+      </component>
+
+   </scope>
+</config>
