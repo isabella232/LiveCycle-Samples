@@ -6,49 +6,30 @@
 	<classpathentry kind="var" path="LIVECYCLE_SDK_DIR/client-libs/common/adobe-livecycle-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/activation.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/antlr.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/auth.conf"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/avalon-framework.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/commons-codec.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/commons-httpclient.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/commons-logging.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/concurrent.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/ejb3-persistence.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/getopt.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/hibernate-annotations.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/hibernate-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jacorb.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/javassist.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jaxb-api.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jaxb-impl.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jaxb-xjc.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-annotations-ejb3.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-aop-jdk50-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-aspect-jdk50-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-client.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-common-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-deployment.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-ejb3-client.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-ejb3x.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-iiop-client.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-j2ee.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-jaxrpc.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-jaxws.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-jsr77-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-remoting.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-saaj.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-serialization.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-srp-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-system-client.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-transaction-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jboss-xml-binding.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jbossall-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jbosscx-client.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jbossha-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jbossjmx-ant.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jbossmq-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jbosssx-client.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jbossws-client.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/jbossws-wsconsume-impl.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jmx-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jmx-invoker-adaptor-client.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/jnp-client.jar"/>
@@ -56,7 +37,6 @@
 	<classpathentry kind="var" path="JBOSS_ROOT/client/logkit.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/mail.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/scout.jar"/>
-	<classpathentry kind="var" path="JBOSS_ROOT/client/servlet-api.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/stax-api.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/trove.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT/client/wsdl4j.jar"/>
@@ -83,7 +63,6 @@
 	<classpathentry kind="var" path="LIVECYCLE_SDK_DIR/client-libs/thirdparty/serializer.jar"/>
 	<classpathentry kind="var" path="LIVECYCLE_SDK_DIR/client-libs/thirdparty/wsdl4j.jar"/>
 	<classpathentry kind="var" path="LIVECYCLE_SDK_DIR/client-libs/thirdparty/xalan.jar"/>
-	<classpathentry kind="var" path="LIVECYCLE_SDK_DIR/client-libs/thirdparty/xbean.jar"/>
 	<classpathentry kind="var" path="LIVECYCLE_SDK_DIR/client-libs/thirdparty/xercesImpl.jar"/>
 	<classpathentry kind="var" path="LIVECYCLE_SDK_DIR/client-libs/thirdparty/xsdlib.jar"/>
 	<classpathentry kind="var" path="JBOSS_ROOT"/>

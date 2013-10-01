@@ -7,6 +7,7 @@
 	          
 	<path id="dataaccess.classpath.compile">
    		<pathelement path="${COMMON_LIB}/adobe-livecycle-client.jar"/>
+		<pathelement path="${THIRDPARTY_LIB}/xercesImpl.jar"/>
 	</path>
 
 	<path id="dataaccess.classpath.runtime">
